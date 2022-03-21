@@ -25,7 +25,7 @@ int genRandoms() {
 }
 
 void *paint() {
-    printf("Artist %d is painting %ld \n", pthread_self());
+    printf("Artist is painting %ld \n", pthread_self());
 
     // workID corresponds to the 'artist'
     // Each artist owns one row to paint on.
