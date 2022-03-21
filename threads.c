@@ -7,7 +7,6 @@
 // Implement your part 2 solution here
 // gcc -lpthread threads.c -o threads
 
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -25,7 +24,7 @@ int genRandoms() {
 }
 
 void *paint() {
-    printf("Artist is painting %ld \n", pthread_self());
+//    printf("Artist is painting %ld \n", pthread_self());
 
     // workID corresponds to the 'artist'
     // Each artist owns one row to paint on.
