@@ -11,21 +11,21 @@
 #include <unistd.h>
 //#include <sys/wait.h> // Library with the 'wait' system call.
 
-int colors[10][10 * 3];
+int colors[64][64 * 3];
 
 // Modify your paint function here
-void paint(int workID) {
+void paint(int workID, struct _iobuf *fp) {
     printf("Artist %d is painting\n", workID);
+//
+//    FILE *fp;
+//    fp = fopen("vfork.ppm", "w+");
+//    fputs("P3\n", fp);
+//    fputs("64 64\n", fp);
+//    fputs("255\n", fp);
 
-    FILE *fp;
-    fp = fopen("vfork.ppm", "w+");
-    fputs("P3\n", fp);
-    fputs("64 64\n", fp);
-    fputs("255\n", fp);
-
-    for (int i = 0; i < 64 * 3; i++) {
+//    for (int i = 0; i < 64; i++) {
         for (int j = 0; j < 64 * 3; j++) {
-            fprintf(fp, "%d", colors[i][j]);
+            fprintf(fp, "%d", colors[workID][j]);
             if ((j + 1) % 3 == 0) {
                 fputs("space", fp);
                 printf("space me");
@@ -37,8 +37,8 @@ void paint(int workID) {
             }
         }
         fputs("\n", fp);
-    }
-    fclose(fp);
+//    }
+//    fclose(fp);
 }
 
 int main(int argc, char **argv) {
@@ -48,6 +48,13 @@ int main(int argc, char **argv) {
     int numberOfArtists = 64; // How many child processes do we want?
 
     pid_t pid;
+    FILE *fp;
+    fp = fopen("vfork.ppm", "w+");
+    fputs("P3\n", fp);
+    fputs("64 64\n", fp);
+    fputs("255\n", fp);
+
+
     // main loop where we fork new threads
     for (int i = 0; i < numberOfArtists; i++) {
         // (1) Perform a fork
@@ -57,11 +64,13 @@ int main(int argc, char **argv) {
         // (2) Make only the child do some work (i.e. paint) and then terminate.
         if (pid == 0) {
 
-            paint(i);
+            paint(i,fp);
             exit(0);
 
         }
     }
+
+    fclose(fp);
 //
 //    pid_t wpid;
 //    int status = 0;
