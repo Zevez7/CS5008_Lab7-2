@@ -1,84 +1,52 @@
-//
-// Created by datgu on 3/20/2022.
-//
-
-// Implement your part 1 solution here
-// gcc vfork.c -o vfork
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-//#include <sys/wait.h> // Library with the 'wait' system call.
 
-int colors[64][64 * 3];
+// Global array
+// This is our 'canvas' we are painting on.
+// It is 64 rows by 64 columns (each pixel stores 3 color components, R,G,B)
+int colors[64][64*3];
 
-// Modify your paint function here
-void paint(int workID, struct _iobuf *fp) {
-    printf("Artist %d is painting\n", workID);
-//
-//    FILE *fp;
-//    fp = fopen("vfork.ppm", "w+");
-//    fputs("P3\n", fp);
-//    fputs("64 64\n", fp);
-//    fputs("255\n", fp);
+// Paint function called from each child
+void paint(int workID){
+    printf("Artist %d is painting\n",workID);
 
-//    for (int i = 0; i < 64; i++) {
-        for (int j = 0; j < 64 * 3; j++) {
-            fprintf(fp, "%d", colors[workID][j]);
-            if ((j + 1) % 3 == 0) {
-                fputs("space", fp);
-                printf("space me");
-
-            } else{
-
-                fputs("2", fp);
-
-            }
-        }
-        fputs("\n", fp);
-//    }
-//    fclose(fp);
+    // workID corresponds to the 'artist'
+    // Each artist owns one row to paint on.
+    // An artist paints along each pixel 1 at a time, painting an
+    // R,G,B value (that is why it is 64*3)
+    for(int i =0; i < 64*3; i++){
+        colors[workID][i] = workID; // Try doing something more interesting with the colors!
+    }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv){
 
-
-//    int* integers = malloc(sizeof(int)*8000);
-    int numberOfArtists = 64; // How many child processes do we want?
-
+    // Represents how many child processes we want.
+    // In this case--64.
+    int numberOfArtists = 64;
+    // Store the process id.
     pid_t pid;
-    FILE *fp;
-    fp = fopen("vfork.ppm", "w+");
-    fputs("P3\n", fp);
-    fputs("64 64\n", fp);
-    fputs("255\n", fp);
 
-
-    // main loop where we fork new threads
-    for (int i = 0; i < numberOfArtists; i++) {
-        // (1) Perform a fork
-        pid_t vfork();
-
-
-        // (2) Make only the child do some work (i.e. paint) and then terminate.
-        if (pid == 0) {
-
-            paint(i,fp);
+    for(int i =0; i < numberOfArtists; i++){
+        pid = vfork();
+        // Work that each child does
+        if(pid==0){
+            paint(i);
             exit(0);
-
         }
+        // Question, why do I log which thread executed here?
+        // Log some information in a parent.
+        printf("Child created: %d\n",pid);
     }
 
-    fclose(fp);
-//
-//    pid_t wpid;
-//    int status = 0;
-//    while ((wpid = wait(&status)) > 0);
+    // Parent
+    printf("Masterpiece(vfork.ppm) is being assembled\n");
 
-    printf("parent is exiting(last artist out!)\n");
-
-//    free(integers);
+    // Write out the PPM file
+    // You have to do this!
+    // TODO: (See task 6)
 
     return 0;
 }
