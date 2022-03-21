@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-//#include <sys/wait.h> // Library with the 'wait' system call.
+#include <sys/wait.h> // Library with the 'wait' system call.
 
 int colors[64][64 * 3];
 
@@ -28,6 +28,7 @@ void paint(int workID) {
             fprintf(fp, "%d", colors[i][j]);
             if ((j + 1) % 3 == 0) {
                 fputs("space", fp);
+                printf("space me");
 
             } else{
 
@@ -62,9 +63,9 @@ int main(int argc, char **argv) {
         }
     }
 
-//    pid_t wpid;
-//    int status = 0;
-//    while ((wpid = wait(&status)) > 0);
+    pid_t wpid;
+    int status = 0;
+    while ((wpid = wait(&status)) > 0);
 
     printf("parent is exiting(last artist out!)\n");
 
