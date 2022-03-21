@@ -12,6 +12,22 @@ int genRandoms() {
     return rand() % (256);
 }
 
+int savePMMFile(){
+
+    FILE *fp;
+    fp = fopen("vfork.ppm","w+");
+    fputs("P3\n",fp);
+    fputs("64 64\n",fp);
+    fputs("255\n",fp);
+    for(int i =0; i < 64;i++){
+        for(int j =0; j < 64*3; j++){
+            fprintf(fp,"%d",colors[i][j]);
+            fputs(" ",fp);
+        }
+        fputs("\n",fp);
+    }
+    fclose(fp);
+}
 // Paint function called from each child
 void paint(int workID) {
     printf("Artist %d is painting\n", workID);
@@ -53,6 +69,7 @@ int main(int argc, char **argv) {
     // You have to do this!
     // TODO: (See task 6)
 
+    savePMMFile();
 
 
 
