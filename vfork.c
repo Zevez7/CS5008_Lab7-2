@@ -22,7 +22,7 @@ void paint(int workID) {
     // R,G,B value (that is why it is 64*3)
 //    printf("random %d", printRandoms());
     for (int i = 0; i < 64 * 3; i++) {
-        colors[workID][i] = genRandoms; // Try doing something more interesting with the colors!
+        colors[workID][i] = genRandoms(); // Try doing something more interesting with the colors!
     }
 }
 
