@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h> // Library with the 'wait' system call.
+//#include <sys/wait.h> // Library with the 'wait' system call.
 
 int colors[64][64 * 3];
 
@@ -26,7 +26,14 @@ void paint(int workID) {
     for (int i = 0; i < 64 * 3; i++) {
         for (int j = 0; j < 64 * 3; j++) {
             fprintf(fp, "%d", colors[i][j]);
-            fputs("2", fp);
+            if ((j + 1) % 3 == 0) {
+                fputs("space", fp);
+
+            } else{
+
+                fputs("2", fp);
+
+            }
         }
         fputs("\n", fp);
     }
