@@ -8,7 +8,7 @@
 // It is 64 rows by 64 columns (each pixel stores 3 color components, R,G,B)
 int colors[64][64 * 3];
 
-int printRandoms() {
+int genRandoms() {
     return rand() % (256);
 }
 
@@ -20,9 +20,9 @@ void paint(int workID) {
     // Each artist owns one row to paint on.
     // An artist paints along each pixel 1 at a time, painting an
     // R,G,B value (that is why it is 64*3)
-    printf("random %d", printRandoms());
+//    printf("random %d", printRandoms());
     for (int i = 0; i < 64 * 3; i++) {
-        colors[workID][i] = workID; // Try doing something more interesting with the colors!
+        colors[workID][i] = genRandoms; // Try doing something more interesting with the colors!
     }
 }
 
