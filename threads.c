@@ -24,8 +24,8 @@ int genRandoms() {
     return rand() % (256);
 }
 
-void *paint(int workID) {
-    printf("Artist %d is painting\n", workID);
+void *paint() {
+    printf("Artist %d is painting %ld \n", pthread_self());
 
     // workID corresponds to the 'artist'
     // Each artist owns one row to paint on.
@@ -33,35 +33,47 @@ void *paint(int workID) {
     // R,G,B value (that is why it is 64*3)
 //    printf("random %d", printRandoms());
     for (int i = 0; i < 64 * 3; i++) {
-        colors[workID][i] = genRandoms(); // Try doing something more interesting with the colors!
-//        printf("%d \n", colors[workID][i]);
+        colors[pthread_self()][i] = genRandoms(); // Try doing something more interesting with the colors!
+//        printf("%d \n", colors[pthread_self()][i]);
     }
 }
 
-int main() {
-    // create thread storage;
-//    pthread_t tid[10000];
+int savePMMFile() {
 
-//    printf("count %d", count);
-//    for (int i = 0; i < 10000; ++i) {
-//        pthread_create(&tid[i], NULL, thread, NULL);
-//
-//    }
+    FILE *fp;
+    fp = fopen("pthread.ppm", "w+");
+    fputs("P3\n", fp);
+    fputs("64 64\n", fp);
+    fputs("255\n", fp);
+    for (int i = 0; i < 64; i++) {
+        for (int j = 0; j < 64 * 3; j++) {
+            fprintf(fp, "%d", colors[i][j]);
+            fputs(" ", fp);
+        }
+        fputs("\n", fp);
+    }
+    fclose(fp);
+}
+
+int main() {
 
     pthread_t tid[64];
 
     int numberOfArtists = 64;
 
     for (int i = 0; i < numberOfArtists; i++) {
-        pthread_create(&tid[i], NULL, paint(i), NULL);
+        pthread_create(&tid[i], NULL, paint, NULL);
     }
 
 
-    for (int i = 0; i < 64; ++i) {
+    for (int i = 0; i < numberOfArtists; ++i) {
         pthread_join(tid[i], NULL);
     }
 
+    printf("color numbers %d \n", colors[61][3]);
     printf("Back to main function %ld \n", pthread_self());
+
+    savePMMFile();
 
 
     return 0;
