@@ -33,7 +33,10 @@ void *paint() {
         colors[counter][i] = genRandoms(); // Try doing something more interesting with the colors!
 //        printf("random %d", genRandoms());
     }
+    pthread_mutex_lock(&mutex1);
     counter = counter + 1;
+    pthread_mutex_unlock(&mutex1);
+
 }
 
 int savePPMFile() {
