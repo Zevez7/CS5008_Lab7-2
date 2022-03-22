@@ -12,22 +12,25 @@ int genRandoms() {
     return rand() % (256);
 }
 
-int savePMMFile(){
+int savePMMFile() {
 
     FILE *fp;
-    fp = fopen("vfork.ppm","w+");
-    fputs("P3\n",fp);
-    fputs("64 64\n",fp);
-    fputs("255\n",fp);
-    for(int i =0; i < 64;i++){
-        for(int j =0; j < 64*3; j++){
-            fprintf(fp,"%d",colors[i][j]);
-            fputs(" ",fp);
+    fp = fopen("vfork.ppm", "w+");
+    fputs("P3\n", fp);
+    fputs("64 64\n", fp);
+    fputs("255\n", fp);
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < 64; i++) {
+        for (j = 0; j < 64 * 3; j++) {
+            fprintf(fp, "%d", colors[i][j]);
+            fputs(" ", fp);
         }
-        fputs("\n",fp);
+        fputs("\n", fp);
     }
     fclose(fp);
 }
+
 // Paint function called from each child
 void paint(int workID) {
     printf("Artist %d is painting\n", workID);
@@ -37,7 +40,8 @@ void paint(int workID) {
     // An artist paints along each pixel 1 at a time, painting an
     // R,G,B value (that is why it is 64*3)
 //    printf("random %d", printRandoms());
-    for (int i = 0; i < 64 * 3; i++) {
+    int i = 0;
+    for (i = 0; i < 64 * 3; i++) {
         colors[workID][i] = genRandoms(); // Try doing something more interesting with the colors!
     }
 }
@@ -49,8 +53,8 @@ int main(int argc, char **argv) {
     int numberOfArtists = 64;
     // Store the process id.
     pid_t pid;
-
-    for (int i = 0; i < numberOfArtists; i++) {
+    int i = 0;
+    for (i = 0; i < numberOfArtists; i++) {
         pid = vfork();
         // Work that each child does
         if (pid == 0) {
@@ -65,12 +69,8 @@ int main(int argc, char **argv) {
     // Parent
     printf("Masterpiece(vfork.ppm) is being assembled\n");
 
-    // Write out the PPM file
-    // You have to do this!
-    // TODO: (See task 6)
 
     savePMMFile();
-
 
 
     return 0;
